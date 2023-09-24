@@ -103,7 +103,10 @@ def extract_spotify_playlist_songs(playlist_url, client_id, client_secret, redir
         # Extract and append the song titles to the list
         for track in playlist['tracks']['items']:
             song_title = track['track']['name']
-            song_titles.append(song_title)
+            # song_titles.append(song_title)
+            artists = [artist['name'] for artist in track['track']['artists']]
+            artist_info = ', '.join(artists)
+            song_titles.append(f"{song_title} - {artist_info}")
 
         return song_titles  # Return the list of song titles
 
@@ -116,12 +119,13 @@ def extract_spotify_playlist_songs(playlist_url, client_id, client_secret, redir
 if __name__ == "__main__":
     client_id, client_secret, redirect_uri = get_api_credentials()
 
-    output_directory = "./downloads"  # Replace with your desired directory
+    output_directory = "C:/Users/uddin/Downloads/Music/Trouvaille"  # Replace with your desired directory
     playlist_url = input("Enter playlist URL: ")
     song_titles = extract_spotify_playlist_songs(playlist_url,client_id, client_secret, redirect_uri)
     
     # Now you have a list of song titles that you can iterate over or process further
     for song_title in song_titles:
+        print(song_title)
         first_link = extract_first_youtube_search_link(song_title)
         if first_link:
             download_video_and_convert_to_mp3(first_link, output_directory)
